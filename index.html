@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1a17">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Desisabeltoxicación">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Desisabeltoxicación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1a17; --card:#16241f; --line:#24382f; --text:#eef5f0; --muted:#93a89d;
+  --mint:#5fe3a1; --mint2:#2fb879; --red:#ff6b6b; --gold:#ffd36e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(1200px 600px at 50% -200px,#1d3a2e 0%,var(--bg) 60%);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh;padding:calc(24px + env(safe-area-inset-top)) 16px calc(60px + env(safe-area-inset-bottom))}
+.wrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:Fraunces,serif;font-weight:800;font-size:26px;text-align:center;letter-spacing:-.5px}
+.sub{color:var(--muted);text-align:center;font-size:14px;margin-top:-8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+.hero{text-align:center;padding:28px 20px;position:relative;overflow:hidden}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)}
+.money{font-family:Fraunces,serif;font-weight:800;font-size:56px;color:var(--mint);margin:8px 0 4px;font-variant-numeric:tabular-nums;transition:color .3s}
+.money small{font-size:24px;opacity:.6}
+.money.neg{color:var(--red)}
+.money.drop{animation:shake .5s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.streak{font-size:15px;color:var(--text)}
+.streak b{color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#10201a;border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat .v{font-weight:600;font-size:18px;margin-top:4px;font-variant-numeric:tabular-nums}
+.btn{border:none;border-radius:16px;padding:16px;font:600 16px Inter,sans-serif;cursor:pointer;width:100%;transition:transform .1s,filter .2s}
+.btn:active{transform:scale(.98)}
+.btn-calm{background:linear-gradient(135deg,var(--mint),var(--mint2));color:#06281a}
+.btn-bad{background:transparent;color:var(--red);border:1.5px solid #5a2b2b}
+.btn-ghost{background:#1e2f28;color:var(--text)}
+.row{display:flex;gap:10px}
+.goal-bar{height:12px;background:#10201a;border-radius:99px;overflow:hidden;margin:10px 0 6px;border:1px solid var(--line)}
+.goal-fill{height:100%;background:linear-gradient(90deg,var(--mint2),var(--gold));width:0;transition:width .6s}
+.goal-txt{font-size:14px;color:var(--muted)}
+.goal-name{font-weight:600;font-size:17px;margin-top:4px}
+input{width:100%;background:#10201a;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:12px;font:500 15px Inter,sans-serif;margin-top:6px}
+.field{margin-bottom:12px}
+.field label{font-size:13px;color:var(--muted)}
+.quote{font-family:Fraunces,serif;font-size:18px;line-height:1.4;text-align:center}
+.hist{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:6px;max-height:160px;overflow:auto}
+.hist div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.overlay{position:fixed;inset:0;background:rgba(5,12,9,.82);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.overlay.on{display:flex}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px 22px;max-width:440px;width:100%;text-align:center;display:flex;flex-direction:column;gap:14px;animation:pop .25s}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.modal h2{font-family:Fraunces,serif;font-size:24px}
+.modal p{color:var(--muted);line-height:1.5}
+.big-emoji{font-size:48px}
+.breath{width:150px;height:150px;border-radius:50%;margin:10px auto;background:radial-gradient(circle,var(--mint) 0%,var(--mint2) 70%);transform:scale(.55);transition:transform 4s ease-in-out;display:flex;align-items:center;justify-content:center;color:#06281a;font-weight:600}
+.breath.in{transform:scale(1)}
+.timer{font-family:Fraunces,serif;font-size:40px;color:var(--gold);font-variant-numeric:tabular-nums}
+.coin{position:absolute;top:-30px;font-size:26px;animation:fall 1.4s ease-in forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(260px) rotate(360deg);opacity:0}}
+.lost{color:var(--red);font-weight:600;font-size:15px;height:20px}
+.tiny{font-size:12px;color:var(--muted);text-align:center}
+a.link{color:var(--muted);font-size:13px;text-align:center;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <h1 id="title">Cada minuto cuenta 💚</h1>
+  <p class="sub" id="subtitle">Tu dinero creciendo mientras no compras vaper</p>
+
+  <div class="card hero" id="hero">
+    <div class="label">Llevas ahorrado</div>
+    <div class="money" id="money">0,00<small>€</small></div>
+    <div class="lost" id="lost"></div>
+    <div class="streak" id="streak">Racha: <b>0 min</b> sin comprar</div>
+  </div>
+
+  <div class="grid">
+    <div class="stat"><div class="label">Cada minuto</div><div class="v" id="perMin">—</div></div>
+    <div class="stat"><div class="label">Cada día</div><div class="v" id="perDay">—</div></div>
+    <div class="stat"><div class="label">En un mes</div><div class="v" id="perMonth">—</div></div>
+    <div class="stat"><div class="label">En un año</div><div class="v" id="perYear">—</div></div>
+  </div>
+
+  <div class="card">
+    <div class="label">Tu objetivo</div>
+    <div class="goal-name" id="goalName">—</div>
+    <div class="goal-bar"><div class="goal-fill" id="goalFill"></div></div>
+    <div class="goal-txt" id="goalTxt"></div>
+  </div>
+
+  <div class="card"><p class="quote" id="quote"></p></div>
+
+  <button class="btn btn-calm" id="btnCraving">😮‍💨 Tengo ganas de vapear</button>
+  <button class="btn btn-bad" id="btnBuy">Me voy a comprar un vaper…</button>
+
+  <div class="card">
+    <div class="label" style="margin-bottom:10px">Historial de compras</div>
+    <div class="hist" id="hist"></div>
+  </div>
+
+  <a class="link" id="btnSettings">⚙️ Ajustes</a>
+  <p class="tiny">Los datos se guardan solo en este móvil.</p>
+</div>
+
+<!-- Ajustes -->
+<div class="overlay" id="ovSettings"><div class="modal" style="text-align:left">
+  <h2 style="text-align:center">Ajustes</h2>
+  <div class="field"><label>Tu nombre (opcional)</label><input id="sName" placeholder="Ej. Lucía"></div>
+  <div class="field"><label>Precio del vaper (€)</label><input id="sPrice" type="number" step="0.5" min="0"></div>
+  <div class="field"><label>Cada cuántos días te comprabas uno</label><input id="sDays" type="number" step="1" min="1"></div>
+  <div class="field"><label>Tu objetivo: ¿qué te quieres comprar con lo que ahorres?</label><input id="sGoal" placeholder="Ej. Unas zapatillas"></div>
+  <div class="field"><label>Precio de ese objetivo (€)</label><input id="sGoalPrice" type="number" step="1" min="1"></div>
+  <div class="field"><label>Empecé a dejarlo el…</label><input id="sStart" type="datetime-local"></div>
+  <button class="btn btn-calm" id="sSave">Guardar</button>
+  <button class="btn btn-ghost" id="sReset">Borrar historial de compras</button>
+</div></div>
+
+<!-- Ganas -->
+<div class="overlay" id="ovCraving"><div class="modal">
+  <h2>Respira conmigo</h2>
+  <p>Las ganas fuertes suelen bajar en unos minutos. Aguanta este minuto.</p>
+  <div class="breath" id="breath">Inspira</div>
+  <div class="timer" id="cTimer">60</div>
+  <p class="quote" id="cQuote" style="font-size:16px"></p>
+  <button class="btn btn-ghost" id="cClose">Ya estoy mejor</button>
+</div></div>
+
+<!-- Compra paso 1 -->
+<div class="overlay" id="ovBuy1"><div class="modal">
+  <div class="big-emoji">✋</div>
+  <h2 id="b1Title">Espera un momento</h2>
+  <p id="b1Text"></p>
+  <button class="btn btn-calm" id="b1Wait">Esperar 5 minutos primero</button>
+  <button class="btn btn-ghost" id="b1No">Vale, no me lo compro 💪</button>
+  <button class="btn btn-bad" id="b1Yes">Ya me lo he comprado</button>
+</div></div>
+
+<!-- Espera -->
+<div class="overlay" id="ovWait"><div class="modal">
+  <div class="big-emoji">⏳</div>
+  <h2>5 minutos para ti</h2>
+  <p>Bebe agua, sal a dar una vuelta o escribe a alguien. Mira cómo sigue creciendo tu dinero:</p>
+  <div class="timer" id="wTimer">5:00</div>
+  <div class="money" id="wMoney" style="font-size:32px"></div>
+  <button class="btn btn-calm" id="wDone">Se me han pasado las ganas 🎉</button>
+  <button class="btn btn-bad" id="wBuy">Me lo compro igualmente</button>
+</div></div>
+
+<!-- Tras compra -->
+<div class="overlay" id="ovAfter"><div class="modal">
+  <div class="big-emoji">🫂</div>
+  <h2>No pasa nada, sigue</h2>
+  <p id="aText"></p>
+  <button class="btn btn-calm" id="aClose">Vuelvo a empezar la racha</button>
+</div></div>
+
+<!-- Victoria -->
+<div class="overlay" id="ovWin"><div class="modal">
+  <div class="big-emoji">🏆</div>
+  <h2>¡Eso es!</h2>
+  <p id="winText"></p>
+  <button class="btn btn-calm" id="winClose">Seguir ahorrando</button>
+</div></div>
+
+<script>
+const KEY='sinvaper_v1';
+const MIN=60000, DAY=86400000;
+let S;
+function defaults(){return{name:'',price:15,days:7,goal:'Un capricho para mí',goalPrice:150,start:Date.now(),purchases:[],resisted:0}}
+function load(){try{const r=localStorage.getItem(KEY);S=r?Object.assign(defaults(),JSON.parse(r)):defaults()}catch(e){S=defaults()}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+load();
+
+const $=id=>document.getElementById(id);
+const eur=(n,d=2)=>n.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d})+' €';
+const rate=()=>S.price/(S.days*DAY); // €/ms
+
+function saved(at=Date.now()){
+  return rate()*(at-S.start) - S.purchases.length*S.price;
+}
+function lastMark(){return S.purchases.length?Math.max(S.start,S.purchases[S.purchases.length-1]):S.start}
+function dur(ms){
+  const d=Math.floor(ms/DAY),h=Math.floor(ms%DAY/3600000),m=Math.floor(ms%3600000/MIN);
+  if(d) return `${d} día${d>1?'s':''} ${h} h`;
+  if(h) return `${h} h ${m} min`;
+  return `${m} min`;
+}
+
+const quotes=[
+ "Cada minuto sin vapear es dinero que vuelve a ti.",
+ "No tienes que dejarlo para siempre hoy. Solo durante la próxima hora.",
+ "Las ganas son una ola: suben, llegan arriba y bajan. Siempre bajan.",
+ "Lo difícil de hoy es lo que te hará sentir orgullosa mañana.",
+ "Tus pulmones no saben de excusas, pero sí notan cada día que les das.",
+ "Una recaída no borra lo que ya has conseguido.",
+ "Eres más fuerte que un aparatito de 15 euros.",
+ "Imagínate dentro de un mes, mirando este contador. ✨",
+ "Cada vez que dices que no, la siguiente es un poco más fácil."
+];
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+
+function renderStatic(){
+  const hi=S.name?`, ${S.name}`:'';
+  $('title').textContent=`Cada minuto cuenta${hi} 💚`;
+  const r=rate();
+  $('perMin').textContent=eur(r*MIN,4);
+  $('perDay').textContent=eur(r*DAY);
+  $('perMonth').textContent=eur(r*DAY*30);
+  $('perYear').textContent=eur(r*DAY*365);
+  $('goalName').textContent=`🎯 ${S.goal}`;
+  const h=$('hist');
+  if(!S.purchases.length){h.innerHTML='<div><span>Ninguna compra todavía 🎉</span></div>'}
+  else h.innerHTML=S.purchases.slice().reverse().map(t=>{
+    const d=new Date(t);return `<div><span>${d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})} ${d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</span><span style="color:var(--red)">−${eur(S.price)}</span></div>`}).join('');
+  if(S.resisted) h.insertAdjacentHTML('afterbegin',`<div><span>Veces que has dicho que no</span><span style="color:var(--mint)">💪 ${S.resisted}</span></div>`);
+}
+let animating=false;
+function setMoney(v){
+  const el=$('money');
+  const s=v.toLocaleString('es-ES',{minimumFractionDigits:4,maximumFractionDigits:4});
+  el.innerHTML=s+'<small> €</small>';
+  el.classList.toggle('neg',v<0);
+}
+function tick(){
+  const now=Date.now(), v=saved(now);
+  if(!animating) setMoney(v);
+  $('streak').innerHTML=`Racha: <b>${dur(now-lastMark())}</b> sin comprar`;
+  const p=Math.max(0,Math.min(1,v/S.goalPrice));
+  $('goalFill').style.width=(p*100)+'%';
+  const left=S.goalPrice-v;
+  $('goalTxt').textContent = left<=0 ? `¡Conseguido! Ya tienes ${eur(v)} 🎉` :
+    `${eur(Math.max(0,v))} de ${eur(S.goalPrice,0)} · te faltan ${dur(left/rate())} sin comprar`;
+  if($('ovWait').classList.contains('on')) $('wMoney').textContent='+'+eur(v,4);
+}
+renderStatic(); $('quote').textContent=rand(quotes);
+setInterval(tick,100); tick();
+setInterval(()=>{$('quote').textContent=rand(quotes)},15000);
+
+const open=id=>$(id).classList.add('on'), close=id=>$(id).classList.remove('on');
+
+/* Ganas: respiración */
+let cInt,bInt;
+$('btnCraving').onclick=()=>{
+  open('ovCraving');$('cQuote').textContent=rand(quotes);
+  let t=60;$('cTimer').textContent=t;
+  const b=$('breath');let inh=true;b.classList.add('in');b.textContent='Inspira';
+  bInt=setInterval(()=>{inh=!inh;b.classList.toggle('in',inh);b.textContent=inh?'Inspira':'Suelta'},4000);
+  cInt=setInterval(()=>{t--;$('cTimer').textContent=t>0?t:'✓';if(t<=0){clearInterval(cInt);$('cQuote').textContent='Lo has aguantado. Eso es exactamente cómo se deja. 💚'}},1000);
+};
+$('cClose').onclick=()=>{clearInterval(cInt);clearInterval(bInt);close('ovCraving');S.resisted++;save();renderStatic();celebrate('Has superado las ganas. Tu dinero sigue intacto y tu racha continúa.')};
+
+/* Compra */
+$('btnBuy').onclick=()=>{
+  const v=saved(), streak=dur(Date.now()-lastMark());
+  const yearly=eur(rate()*DAY*365,0);
+  $('b1Text').innerHTML = v>0
+    ? `Llevas <b style="color:var(--mint)">${eur(v)}</b> ahorrados y <b style="color:var(--gold)">${streak}</b> de racha. Si lo compras, perderás <b style="color:var(--red)">${eur(S.price)}</b> de golpe.<br><br>Al año son <b>${yearly}</b>. ¿Qué harías tú con ese dinero?`
+    : `Llevas <b style="color:var(--gold)">${streak}</b> de racha. Esta podría ser la primera vez que dices que no. Al año son <b>${yearly}</b>.`;
+  open('ovBuy1');
+};
+$('b1No').onclick=()=>{close('ovBuy1');S.resisted++;save();renderStatic();celebrate(`Acabas de proteger ${eur(S.price)}. Y lo más importante: has ganado tú.`)};
+let wInt;
+$('b1Wait').onclick=()=>{
+  close('ovBuy1');open('ovWait');let t=300;
+  const f=()=>$('wTimer').textContent=`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`;f();
+  wInt=setInterval(()=>{t--;f();if(t<=0){clearInterval(wInt);$('wTimer').textContent='¡5 minutos! 🎉'}},1000);
+};
+$('wDone').onclick=()=>{clearInterval(wInt);close('ovWait');S.resisted++;save();renderStatic();celebrate('Las ganas se han ido y tu dinero sigue aquí. Eso es fuerza de verdad.')};
+$('wBuy').onclick=()=>{clearInterval(wInt);close('ovWait');buy()};
+$('b1Yes').onclick=()=>{close('ovBuy1');buy()};
+
+function buy(){
+  const before=saved();
+  S.purchases.push(Date.now());save();
+  const after=saved();
+  animating=true;
+  const el=$('money');el.classList.add('drop');
+  $('lost').textContent=`−${eur(S.price)}`;
+  const hero=$('hero');
+  for(let i=0;i<10;i++){setTimeout(()=>{const c=document.createElement('div');c.className='coin';c.textContent='🪙';c.style.left=(10+Math.random()*80)+'%';hero.appendChild(c);setTimeout(()=>c.remove(),1500)},i*90)}
+  const t0=performance.now(),D=1600;
+  (function step(t){const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);setMoney(before+(after-before)*e);
+    if(k<1)requestAnimationFrame(step);else{animating=false;el.classList.remove('drop');
+      setTimeout(()=>{$('lost').textContent='';
+        const lost=S.purchases.length*S.price;
+        $('aText').innerHTML=`Has perdido ${eur(S.price)}${S.purchases.length>1?` (en total ya van <b style="color:var(--red)">${eur(lost)}</b>)`:''}, pero no has perdido el camino.<br><br>Dejarlo casi nunca sale a la primera. Lo que cuenta es volver a intentarlo: tu contador empieza a subir otra vez <b>ahora mismo</b>.`;
+        open('ovAfter')},700)}})(t0);
+  renderStatic();
+}
+$('aClose').onclick=()=>close('ovAfter');
+
+function celebrate(txt){$('winText').textContent=txt;open('ovWin');
+  const hero=$('hero');for(let i=0;i<14;i++){setTimeout(()=>{const c=document.createElement('div');c.className='coin';c.textContent=rand(['💚','✨','🪙','🎉']);c.style.left=(5+Math.random()*90)+'%';hero.appendChild(c);setTimeout(()=>c.remove(),1500)},i*70)}}
+$('winClose').onclick=()=>close('ovWin');
+
+/* Ajustes */
+function toLocalInput(ms){const d=new Date(ms);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
+$('btnSettings').onclick=()=>{
+  $('sName').value=S.name;$('sPrice').value=S.price;$('sDays').value=S.days;
+  $('sGoal').value=S.goal;$('sGoalPrice').value=S.goalPrice;$('sStart').value=toLocalInput(S.start);open('ovSettings')};
+$('sSave').onclick=()=>{
+  S.name=$('sName').value.trim();S.price=Math.max(0,+$('sPrice').value||15);S.days=Math.max(1,+$('sDays').value||7);
+  S.goal=$('sGoal').value.trim()||'Un capricho para mí';S.goalPrice=Math.max(1,+$('sGoalPrice').value||150);
+  const st=new Date($('sStart').value).getTime();if(!isNaN(st))S.start=Math.min(st,Date.now());
+  save();renderStatic();close('ovSettings')};
+$('sReset').onclick=()=>{S.purchases=[];S.resisted=0;save();renderStatic();close('ovSettings')};
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o&&o.id!=='ovWait'&&o.id!=='ovCraving')close(o.id)}));
+
+let first=true;try{first=!localStorage.getItem(KEY)}catch(e){}
+if(first){save();$('btnSettings').click();}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
